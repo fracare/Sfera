@@ -24,12 +24,15 @@ checkPulseShape: checkPulseShape.cpp
 makeSpectrum: makeSpectrum.cpp
 	$(CC) -Wall $(INCLUDES) -o makeSpectrum makeSpectrum.cpp $(ROOTFLAG) $(EXTRALIBS)
 
+measFromPShape: measFromPShape.cpp
+	$(CC) -Wall $(INCLUDES) -o measFromPShape measFromPShape.cpp $(ROOTFLAG) $(EXTRALIBS)
 
 
-all: asciiToTree checkPulseShape measToTree makeSpectrum
+
+all: asciiToTree checkPulseShape measToTree makeSpectrum measFromPShape 
 
 
 clean:
-	rm asciiToTree checkPulseShape measToTree makeSpectrum
+	rm asciiToTree checkPulseShape measToTree makeSpectrum measFromPShape 
 
 
