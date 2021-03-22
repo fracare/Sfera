@@ -44,7 +44,7 @@ int main( int argc, char* argv[] ) {
   tree->SetBranchAddress( "pshape", &pshape );
 
   int k = 0;
-  int NBASE = 110;
+  int NBASE = 100;
   int NEV = tree->GetEntries();
   
   tree->GetEntry(3);
@@ -79,8 +79,6 @@ int main( int argc, char* argv[] ) {
 
         }
 
-        
-
         //amplitude
         if (abs(pshape[ch][i]) > abs(maxV)){
           maxV = pshape[ch][i];
@@ -91,32 +89,37 @@ int main( int argc, char* argv[] ) {
 
       } //all points (1024)
       
-      //std::cout<< "channell " << ch +1 << " of " << nch << " check" << std::endl;
+      
       sumB /= NBASE;
       check_base[k*nch + ch] = sumB;
       dig_base[k*nch + ch] = base[ch];
-      std::cout << " my base = " << sumB << "\t dig = " << base[ch] << std:: endl;
-      check_vcharge[k*nch + ch] = sumC - sumB * 1024;
+      //std::cout << " my base = " << sumB << "\t dig = " << base[ch] << std:: endl;
+      check_vcharge[k*nch + ch] = sumC ;
+      //- sumB * 1024;
       dig_vcharge[k*nch + ch] = vcharge[ch];
-      std::cout << " my charge = " <<  check_vcharge[k*nch + ch] << "\t dig = " << vcharge[ch] << std:: endl;
+      //std::cout << " my charge = " <<  check_vcharge[k*nch + ch] << "\t dig = " << vcharge[ch] << std:: endl;
       check_vamp[k*nch + ch] = maxV;
       dig_vamp[k*nch + ch] = vamp[ch];
-      std::cout << " my amp = " <<  check_vamp[k*nch + ch] << "\t dig = " << vamp[ch] << std:: endl;
+      //std::cout << " my amp = " <<  check_vamp[k*nch + ch] << "\t dig = " << vamp[ch] << std:: endl;
+
+
   }// for all channels
 } // for events
 
-  TGraph* Gbase = new TGraph(NEV * nch, check_base, dig_base);
+  TGraph* Gbase = new TGraph(NEV * nch, dig_base, check_base);
   Gbase->SetTitle("CONFRONTO DELLE BASELINE");
   Gbase->GetXaxis()->SetTitle("base (digitzer) [V]");
   Gbase->GetYaxis()->SetTitle("base [V]");
-  TGraph* Gamp = new TGraph(NEV * nch, check_vamp, dig_vamp);
+  TGraph* Gamp = new TGraph(NEV * nch, dig_vamp, check_vamp);
+  Gamp->Fit("pol1");
   Gamp->SetTitle("CONFRONTO DELLE AMPIEZZE");
   Gamp->GetXaxis()->SetTitle("amp (digitzer)");
-  Gamp->GetXaxis()->SetTitle("amp [V] ");
-  TGraph* Gcharge = new TGraph(NEV * nch, check_vcharge, dig_vcharge);
+  Gamp->GetYaxis()->SetTitle("amp [V] ");
+  TGraph* Gcharge = new TGraph(NEV * nch, dig_vcharge, check_vcharge);
+  Gcharge->Fit("pol1");
   Gcharge->SetTitle("CONFRONTO DELLE CHARCHE");
   Gcharge->GetXaxis()->SetTitle("charge (digitzer) [nC]");
-  Gcharge->GetXaxis()->SetTitle("charge [?] ");
+  Gcharge->GetYaxis()->SetTitle("charge [?] ");
   
   size_t pos = 0;
   std::string prefix;
